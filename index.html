@@ -12,27 +12,87 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
     html, body {
       width: 100%;
       height: 100%;
-      background-color: #ffffff;
-      color: #000000;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      overflow-x: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-stack);
+      overflow: hidden;
+      position: relative;
+      transition: background-color 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Der neo-romantische Fiebertraum-Hintergrund */
+    body.fever-dream {
+      background: linear-gradient(135deg, #ffeef8 0%, #ffd6eb 25%, #ffbfe3 50%, #ffa5da 75%, #ff8bc9 100%);
+      background-size: 300% 300%;
+      animation: auroraSky 12s ease infinite alternate;
+    }
+
+    @keyframes auroraSky {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Rosarote Brille & Traum-Aura */
+    .rose-glasses-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      background: 
+        radial-gradient(circle at center, transparent 30%, rgba(255, 105, 180, 0.25) 75%, rgba(255, 20, 147, 0.45) 100%),
+        radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.6) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 105, 180, 0.5) 0%, transparent 50%);
+      mix-blend-mode: multiply;
+      transition: opacity 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    body.fever-dream .rose-glasses-overlay {
+      opacity: 1;
+      animation: dreamPulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes dreamPulse {
+      0% { opacity: 0.8; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.04); }
+    }
+
+    /* Canvas für magische Partikel, Herzen & Sternenstaub */
+    #feverCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 3;
     }
 
     main {
+      position: relative;
+      z-index: 4;
       width: 100%;
-      max-width: 640px;
+      height: 100%;
+      min-height: 100dvh;
       padding: 2.5rem 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-align: center;
       gap: 2.5rem;
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .question {
@@ -43,95 +103,166 @@
       color: #000000;
       word-break: break-word;
       text-wrap: balance;
+      transition: color 1s ease, text-shadow 1s ease, transform 0.8s ease;
+    }
+
+    body.fever-dream .question {
+      color: #7a003f;
+      text-shadow: 0 0 25px rgba(255, 105, 180, 0.6), 0 0 50px rgba(255, 255, 255, 0.8);
+      transform: translateY(-8px);
     }
 
     .action-container {
       position: relative;
-      min-height: 120px;
+      min-height: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
     }
 
+    /* Start-Button */
     .reveal-btn {
       appearance: none;
       border: none;
       outline: none;
       background-color: #000000;
       color: #ffffff;
-      font-size: clamp(1.1rem, 3.5vw, 1.35rem);
+      font-size: clamp(1.15rem, 3.8vw, 1.4rem);
       font-weight: 600;
       letter-spacing: -0.01em;
-      padding: 1rem 2.5rem;
+      padding: 1.1rem 2.8rem;
       border-radius: 9999px;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                  box-shadow 0.25s ease, 
-                  opacity 0.3s ease, 
-                  background-color 0.2s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  box-shadow 0.3s ease, 
+                  opacity 0.4s ease;
       user-select: none;
+      z-index: 5;
     }
 
     .reveal-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), 0 3px 8px rgba(0, 0, 0, 0.12);
+      transform: scale(1.06);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
     }
 
     .reveal-btn:active {
-      transform: scale(0.97);
+      transform: scale(0.96);
     }
 
-    .reveal-btn.hidden {
+    .reveal-btn.vanish {
+      transform: scale(0) rotate(15deg);
       opacity: 0;
-      transform: scale(0.8);
       pointer-events: none;
       position: absolute;
     }
 
-    .answer {
+    /* Das epische JA! im Fiebertraum */
+    .answer-wrapper {
       display: none;
-      font-size: clamp(4.5rem, 18vw, 8rem);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      color: #000000;
-      user-select: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
     }
 
-    .answer.revealed {
-      display: inline-block;
-      animation: revealPop 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    .answer-wrapper.revealed {
+      display: flex;
+      animation: answerEruption 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
-    @keyframes revealPop {
+    @keyframes answerEruption {
       0% {
         opacity: 0;
-        transform: scale(0.2) translateY(20px) rotate(-6deg);
-        filter: blur(10px);
+        transform: scale(0.1) rotate(-15deg);
+        filter: blur(20px);
       }
       50% {
         opacity: 1;
         filter: blur(0px);
       }
-      75% {
-        transform: scale(1.15) translateY(-6px) rotate(2deg);
+      70% {
+        transform: scale(1.3) rotate(5deg);
       }
       100% {
         opacity: 1;
-        transform: scale(1) translateY(0) rotate(0deg);
-        filter: blur(0px);
+        transform: scale(1) rotate(0deg);
       }
     }
 
-    /* Respektiert Benutzerpräferenz für reduzierte Bewegung */
+    .answer {
+      font-size: clamp(5.5rem, 24vw, 11rem);
+      font-weight: 950;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      user-select: none;
+      position: relative;
+      background: linear-gradient(135deg, #ff007f 0%, #ff1493 25%, #ff4500 50%, #ff0055 75%, #d6006e 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 10px 25px rgba(255, 20, 147, 0.55))
+              drop-shadow(0 0 50px rgba(255, 105, 180, 0.8));
+      animation: heartbeat 1.35s ease-in-out infinite, gradientShift 4s ease infinite alternate;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.18) rotate(-1deg); }
+      28% { transform: scale(1.06); }
+      42% { transform: scale(1.24) rotate(1.5deg); }
+      70% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Kitschiger Zusatz im Fiebertraum */
+    .fever-subtext {
+      margin-top: 1rem;
+      font-size: clamp(1.2rem, 4.5vw, 2rem);
+      font-weight: 800;
+      color: #ff007f;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 2px 10px rgba(255, 105, 180, 0.4);
+      animation: bounceSubtext 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes bounceSubtext {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+
+    /* Floating Halo Aura */
+    .halo-aura {
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 182, 193, 0.4) 40%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      animation: rotateHalo 10s linear infinite;
+    }
+
+    @keyframes rotateHalo {
+      0% { transform: rotate(0deg) scale(0.9); }
+      50% { transform: rotate(180deg) scale(1.15); }
+      100% { transform: rotate(360deg) scale(0.9); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .reveal-btn, .answer {
-        transition: opacity 0.2s ease !important;
+      *, *::before, *::after {
         animation: none !important;
+        transition: opacity 0.3s ease !important;
       }
-      .answer.revealed {
+      .answer-wrapper.revealed {
         opacity: 1 !important;
         transform: none !important;
       }
@@ -139,30 +270,218 @@
   </style>
 </head>
 <body>
-  <main>
-    <h1 class="question">Ist Samina Alex' Traumfrau?</h1>
+  <div class="rose-glasses-overlay"></div>
+  <canvas id="feverCanvas"></canvas>
+
+  <main id="mainContainer">
+    <h1 class="question" id="question">Ist Samina Alex' Traumfrau?</h1>
 
     <div class="action-container" aria-live="polite">
       <button id="revealBtn" class="reveal-btn" type="button" aria-expanded="false">
         Nachschauen
       </button>
 
-      <div id="answer" class="answer" aria-hidden="true">
-        Ja!
+      <div id="answerWrapper" class="answer-wrapper" aria-hidden="true" title="Klick für noch mehr Liebe!">
+        <div class="halo-aura"></div>
+        <div id="answer" class="answer">Ja!</div>
+        <div class="fever-subtext">💖 Zu 1.000.000% 💘</div>
       </div>
     </div>
   </main>
 
   <script>
     const revealBtn = document.getElementById('revealBtn');
-    const answer = document.getElementById('answer');
+    const answerWrapper = document.getElementById('answerWrapper');
+    const canvas = document.getElementById('feverCanvas');
+    const ctx = canvas.getContext('2d');
 
-    revealBtn.addEventListener('click', () => {
-      revealBtn.classList.add('hidden');
+    let isFeverDream = false;
+    let particles = [];
+    let sparkles = [];
+    let width = 0;
+    let height = 0;
+
+    const LOVE_ICONS = ['💖', '💕', '💗', '💘', '💞', '💓', '✨', '🌸', '🌹', '🥰', '💍', '💌', '🍓'];
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Partikel-Klasse für Herzen und romantische Emojis
+    class FloatingHeart {
+      constructor(x, y, isExplosion = false) {
+        this.x = x ?? Math.random() * width;
+        this.y = y ?? (isExplosion ? height / 2 : height + 40);
+        this.emoji = LOVE_ICONS[Math.floor(Math.random() * LOVE_ICONS.length)];
+        this.size = Math.random() * 26 + 18;
+        this.opacity = Math.random() * 0.4 + 0.6;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotationSpeed = (Math.random() - 0.5) * 0.04;
+        
+        if (isExplosion) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 12 + 4;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed - 3;
+          this.friction = 0.94;
+          this.gravity = 0.12;
+          this.isExplosion = true;
+          this.life = 1;
+          this.decay = Math.random() * 0.015 + 0.008;
+        } else {
+          this.vx = (Math.random() - 0.5) * 1.5;
+          this.vy = -(Math.random() * 2.2 + 1.2);
+          this.swaySpeed = Math.random() * 0.03 + 0.01;
+          this.swayOffset = Math.random() * 100;
+          this.isExplosion = false;
+        }
+      }
+
+      update() {
+        if (this.isExplosion) {
+          this.vx *= this.friction;
+          this.vy = this.vy * this.friction + this.gravity;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.life -= this.decay;
+          this.opacity = Math.max(0, this.life);
+        } else {
+          this.y += this.vy;
+          this.x += Math.sin(this.y * this.swaySpeed + this.swayOffset) * 1.2 + this.vx;
+          this.rotation += this.rotationSpeed;
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, this.opacity));
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.font = `${this.size}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.emoji, 0, 0);
+        ctx.restore();
+      }
+    }
+
+    // Glitzer-Sternchen
+    class Sparkle {
+      constructor(x, y) {
+        this.x = x ?? Math.random() * width;
+        this.y = y ?? Math.random() * height;
+        this.size = Math.random() * 4 + 2;
+        this.color = Math.random() > 0.5 ? '#ffffff' : '#ffd700';
+        this.alpha = Math.random();
+        this.speed = Math.random() * 0.05 + 0.02;
+        this.increasing = Math.random() > 0.5;
+      }
+
+      update() {
+        if (this.increasing) {
+          this.alpha += this.speed;
+          if (this.alpha >= 1) this.increasing = false;
+        } else {
+          this.alpha -= this.speed;
+          if (this.alpha <= 0) {
+            this.increasing = true;
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+          }
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = '#fff';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Herz-Explosion erzeugen
+    function explodeHearts(x, y, count = 55) {
+      for (let i = 0; i < count; i++) {
+        particles.push(new FloatingHeart(x, y, true));
+      }
+      for (let i = 0; i < 30; i++) {
+        sparkles.push(new Sparkle(x + (Math.random() - 0.5) * 80, y + (Math.random() - 0.5) * 80));
+      }
+    }
+
+    // Loop
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      if (isFeverDream) {
+        // Kontinuierlich sanft aufsteigende Herzen generieren
+        if (particles.length < 90 && Math.random() < 0.3) {
+          particles.push(new FloatingHeart());
+        }
+
+        // Glitzersterne halten
+        while (sparkles.length < 50) {
+          sparkles.push(new Sparkle());
+        }
+      }
+
+      // Sparkles zeichnen
+      for (let i = sparkles.length - 1; i >= 0; i--) {
+        const s = sparkles[i];
+        s.update();
+        s.draw();
+      }
+
+      // Partikel updaten & zeichnen
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw();
+
+        if (p.isExplosion && p.life <= 0) {
+          particles.splice(i, 1);
+        } else if (!p.isExplosion && p.y < -50) {
+          particles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    // Klick auf "Nachschauen" -> Der neo-romantische Fiebertraum bricht aus!
+    revealBtn.addEventListener('click', (e) => {
+      isFeverDream = true;
+      document.body.classList.add('fever-dream');
+
+      const rect = revealBtn.getBoundingClientRect();
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + rect.height / 2;
+
+      revealBtn.classList.add('vanish');
       revealBtn.setAttribute('aria-expanded', 'true');
 
-      answer.classList.add('revealed');
-      answer.setAttribute('aria-hidden', 'false');
+      answerWrapper.classList.add('revealed');
+      answerWrapper.setAttribute('aria-hidden', 'false');
+
+      // Megabombe an Herzen und Romantik
+      explodeHearts(originX, originY, 80);
+      setTimeout(() => explodeHearts(originX, originY - 40, 50), 200);
+      setTimeout(() => explodeHearts(originX, originY + 40, 50), 400);
+    });
+
+    // Klick / Tap auf den Bildschirm im Fiebertraum erzeugt noch mehr Herzchen
+    window.addEventListener('pointerdown', (e) => {
+      if (!isFeverDream) return;
+      explodeHearts(e.clientX, e.clientY, 25);
     });
   </script>
 </body>
